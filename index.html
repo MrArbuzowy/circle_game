@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Камень,Ножници,Бумага</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="12345" ></canvas>
+
+</body>
+<script>
+    let canvas= document.getElementById('12345')
+    let context=canvas.getContext("2d")
+    canvas.width=window.innerWidth
+    canvas.height=window.innerHeight
+    let foods=[]
+
+
+
+
+
+    let player1up=false
+    let player1right=false
+    let player1down=false
+    let player1left=false
+
+    let player2up=false
+    let player2right=false
+    let player2down=false
+    let player2left=false
+
+    let player1win=false
+    let player2win=false
+
+
+
+    let player2X=canvas.width-300
+    let player2Y=500
+    let player2Ximpuls=0
+    let player2Yimpuls=0
+    let player2Radius=10
+
+    let player1X=300
+    let player1Y=500
+    let player1Radius=10
+    let player1Ximpuls=0
+    let player1Yimpuls=0
+    window.onkeydown=function(event){
+        console.log(event.code)
+        if(event.code==="KeyW"){
+            player1up=true
+        }
+        if(event.code==="KeyD"){
+            player1right=true
+        }
+        if(event.code==="KeyS"){
+            player1down=true
+        }
+        if(event.code==="KeyA"){
+            player1left=true
+        }
+
+        if(event.code==="ArrowUp"){
+            player2up=true
+        }
+        if(event.code==="ArrowRight"){
+            player2right=true
+        }
+        if(event.code==="ArrowDown"){
+            player2down=true
+        }
+        if(event.code==="ArrowLeft"){
+            player2left=true
+        }
+
+    }
+    window.onkeyup=function(event){
+        if(event.code==="KeyW"){
+            player1up=false
+        }
+        if(event.code==="KeyD"){
+            player1right=false
+        }
+        if(event.code==="KeyS"){
+            player1down=false
+        }
+        if(event.code==="KeyA"){
+            player1left=false
+        }
+        if(event.code==="ArrowUp"){
+            player2up=false
+        }
+        if(event.code==="ArrowRight"){
+            player2right=false
+        }
+        if(event.code==="ArrowDown"){
+            player2down=false
+        }
+        if(event.code==="ArrowLeft"){
+            player2left=false
+        }
+    }
+
+
+    function drow(){
+        context.fillStyle="#222222"
+        context.fillRect(0,0,canvas.width,canvas.height)
+        context.beginPath()
+        context.fillStyle="#D9514EFF"
+        context.arc(player1X,player1Y,player1Radius,0,4* Math.PI)
+        context.fill()
+        context.beginPath()
+        context.fillStyle="#2DA8D8FF"
+        context.arc(player2X,player2Y,player2Radius,0,4* Math.PI)
+        context.fill()
+
+
+        for (let i = 0; i < foods.length; i++) {
+            context.beginPath()
+            context.fillStyle="#006747FF"
+            context.arc(foods[i].X,foods[i].Y,10,0,4* Math.PI)
+            context.fill()
+
+        }
+
+
+        if(Math.floor(Math.random()*150)===0){
+            let food={};
+            food.X=Math.floor(Math.random()*canvas.width)
+            food.Y=Math.floor(Math.random()*canvas.height)
+            foods.push(food)
+
+        }
+
+
+        for (let i = 0; i < foods.length; i++) {
+            let food=foods[i]
+            let distans=Math.sqrt(Math.pow(player1X-food.X,2)+Math.pow(player1Y-food.Y,2))
+            if(distans<10+player1Radius){
+                foods.splice(i,1)
+                i=i-1
+                player1Radius=player1Radius+10
+            }
+            let distans2=Math.sqrt(Math.pow(player2X-food.X,2)+Math.pow(player2Y-food.Y,2))
+            if(distans2<10+player2Radius){
+                foods.splice(i,1)
+                i=i-1
+                player2Radius=player2Radius+10
+            }
+        }
+        let distans=Math.sqrt(Math.pow(player1X-player2X,2)+Math.pow(player1Y-player2Y,2))
+        if(distans<player1Radius+player2Radius){
+            if(player1Radius>player2Radius){
+                player1win=true
+            }
+            else if(player2Radius>player1Radius){
+                player2win=true
+            }
+        }
+
+        if(player1up==true){
+            player1Yimpuls=player1Yimpuls-0.3
+        }
+        if(player1right==true){
+            player1Ximpuls=player1Ximpuls+0.3
+        }
+        if(player1down==true){
+            player1Yimpuls=player1Yimpuls+0.3
+        }
+        if(player1left==true){
+            player1Ximpuls=player1Ximpuls-0.3
+        }
+        player1X=player1X+player1Ximpuls
+        player1Y=player1Y+player1Yimpuls
+        if(player1X<0){
+            player1Ximpuls=-player1Ximpuls
+        }
+        if(player1X>canvas.width){
+            player1Ximpuls=-player1Ximpuls
+        }
+        if(player1Y<0){
+            player1Yimpuls=-player1Yimpuls
+        }
+        if(player1Y>canvas.height){
+            player1Yimpuls=-player1Yimpuls
+        }
+        
+
+        
+        if(player2up==true){
+            player2Yimpuls=player2Yimpuls-0.3
+        }
+        if(player2right==true){
+            player2Ximpuls=player2Ximpuls+0.3
+        }
+        if(player2down==true){
+            player2Yimpuls=player2Yimpuls+0.3
+        }
+        if(player2left==true){
+            player2Ximpuls=player2Ximpuls-0.3
+        }
+        player2X=player2X+player2Ximpuls
+        player2Y=player2Y+player2Yimpuls
+        if(player2X<0){
+            player2Ximpuls=-player2Ximpuls
+        }
+        if(player2X>canvas.width){
+            player2Ximpuls=-player2Ximpuls
+        }
+        if(player2Y<0){
+            player2Yimpuls=-player2Yimpuls
+        }
+        if(player2Y>canvas.height){
+            player2Yimpuls=-player2Yimpuls
+        }
+        if(player1win){
+            context.fillStyle="#D9514EFF"
+            context.font="100px serif"
+            context.fillText("Win Red",600,600)
+        }
+        else if(player2win){
+            context.fillStyle="#2DA8D8FF"
+            context.font="100px serif"
+            context.fillText("Win Black",600,600) 
+        }
+        else{
+            setTimeout(drow,50)
+        }
+    }
+    setTimeout(drow,50)
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+</html>
